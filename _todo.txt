@@ -1,0 +1,92 @@
+For 2021-10-05 (today):
+    Fix Lock system
+    Bug:
+        Health bar does not scale during preview
+    Unlocking window while a decoy is active doesn't stop the timer.
+    When dragging, use OnScreen helper to not let them drag it off the screen.
+
+    "Always on top" option (Do 0x0FFFFFFF), vs 0-ish
+    While in options:
+        Debug toggle - turn off target changed spam!
+
+    Radial cooldown:
+        Thurallor: if you want to superimpose a "cooldown" overlay on the icon, you can use the built-in images 0x41007E70 through 0x41007E35 - Decoy Cooldown = 30 seconds
+            Possible alternative to white countdown bar thing
+        Thurallor: You can even apply a different color to it with SetBlendMode
+
+    Move CreateDisplaySizeChangedNonsense() into own file, put callback back in,
+    so it doesn't know about the specifics.
+
+Later:
+
+Add an opacity slider?
+Change the image to reflect health status? (Exogenesis9: Doom-style healthbar. Image of the dummy gets more beat up at lower health thresholds.)
+
+Use decoy icon for decoy, deadly decoy icon for deadly decoy.
+Look up skill icons via API?
+    For using Decoy vs Deadly Decoy
+
+Scaling Scrollbar:
+    Populate initial value based on save file WIDTH
+    Update value if screen resolution changes
+Screen Resolution change:
+    Call :Redraw() again.
+
+Scaling while timer is running messes with the timer, makes it a full bar and stops updating.
+When scaling is < 1x (e.g.), timer bar seems to not update until half-way.
+
+Add round() helper function, use on Scrollbar Label starting value.
+Scrollbar value could be > 10 after resolution changes. Constrain value to [1,10] to fix.
+
+Reorganize the code?
+
+Don't disable all things when unlocking, just make it respond to mouse.
+Make resizable through options panel. (Using stretching that Thurallor mentioned)
+    Stretch only the image, so time/health bar can have finer resolution.
+
+
+What level do you get when scaled for Epic Battles? Is it 100? Does the decoy match?
+    Souruko: yeah you are right^^ i just checked with my hunter in a big battle. if i ask localplayer:GetLevel() i still get 130. dummy morale is 19350.
+
+    Souruko: Level scaling you to level 100. Scaling down your equipment. Scaling your virtues down to at most rank 9,999. <- chat message to start scaling
+    Souruko: Removing level scaling, returning you to your normal level. <- chat message to stop scaling
+
+
+    What chat messages are used to start and end level scaling?
+
+    Bazaquezufegs: You could try to detect the scaling effect on the player as a workaround
+    Bazaquezufegs: Chat message or effect applied to player
+
+Responding to Screen Resizes:
+
+Thurallor — 07/16/2021
+Hey, I'm not sure how complex you want to make your Opaque Quest Tracker plugin, but if you want to automatically respond to screen size changes, here is some code that adds a "SizeChanged" event to the "Turbine.UI.Display" object.  It exploits the fact (bug) that all "stretched" windows get "unstretched" (and generate a SizeChanged event) when the display size changes:
+[1:28 AM]
+-- Add the Turbine.UI.Display.SizeChanged event.
+displaySizeListener = Turbine.UI.Window();
+displaySizeListener:SetVisible(true);
+displaySizeListener:SetStretchMode(0);
+displaySizeListener:SetSize(1, 1);
+displaySizeListener:SetStretchMode(1);
+displaySizeListener:SetWantsUpdates(true);
+function displaySizeListener:Update()
+    displaySizeListener:SetSize(2, 2);
+    self.ignoreSizeChangedEvents = 0;
+    self:SetWantsUpdates(false);
+    self.Update = self._Update;
+    self.SizeChanged = self._SizeChanged;
+end
+function displaySizeListener:_Update()
+    self:SetWantsUpdates(false);
+    DoCallbacks(Turbine.UI.Display, "SizeChanged");
+end
+function displaySizeListener:_SizeChanged()
+    if (self.ignoreSizeChangedEvents > 0) then
+        self.ignoreSizeChangedEvents = self.ignoreSizeChangedEvents - 1;
+        return;
+    end
+    self:SetSize(2, 2);
+    self.ignoreSizeChangedEvents = 1;
+    -- Need to wait until the next Update() cycle before reporting.
+    self:SetWantsUpdates(true);
+end

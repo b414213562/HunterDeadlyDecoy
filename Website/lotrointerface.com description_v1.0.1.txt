@@ -1,0 +1,28 @@
+[SIZE="4"][COLOR="DeepSkyBlue"]Introduction[/COLOR][/SIZE]
+
+Hunter Deadly Decoy pops up a window showing remaning time and health for your Yellow-line Decoy and Deadly Decoy.
+
+In the options screen, uncheck "Lock the window in place" to move the window. Slide the Scaling scrollbar to change the size of the window.
+
+[SIZE="4"][COLOR="DeepSkyBlue"]Installation and Startup[/COLOR][/SIZE]
+
+To install:
+
+[list]
+[*]Unzip the archive. You will get a folder called "CubePlugins". Move this folder into your Documents/The Lord of the Rings Online/Plugins folder.
+[/list]
+
+To load the plugin, use the game's built-in Plugin Manager.  This can be found in the "^" menu, at the bottom of the screen.  Click the [IMG]http://i.imgur.com/aT2k9Lw.png[/IMG] icon, then choose "System" and then "Plugin Manager". (As a shortcut, you can also type "/plugins manager" in your chat window.
+
+When the Plugin Manager opens, find Hunter Deadly Decoy on the list on the left side. Click "Load" to load the plugin.  If you would like the plugin to load automatically each time you login, choose your character's name in the "Automatically Load For" pulldown menu.
+
+[SIZE="4"][COLOR="DeepSkyBlue"]Known Issues[/COLOR][/SIZE]
+[list]
+[*]Unlocking does not mix well with using a decoy. Lock the window to make things work.
+[/list]
+
+[SIZE="4"][COLOR="DeepSkyBlue"]Revision History[/COLOR][/SIZE]
+[list]
+[*]2021-10-05: Version 1.0.1: Shows number of seconds remaining as text, added scaling option.
+[*]2021-09-21: Version 1.0.0: Initial release.
+[/list]
